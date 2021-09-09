@@ -21,3 +21,8 @@
        (let [rover {:x 1 :y 1 :heading :WEST}]
          (fact "after turning left it faces south"
                (execute rover 'L') => {:x 1 :y 1 :heading :SOUTH})))
+
+(facts "about a mars rover facing south"
+       (let [rover {:x 1 :y 1 :heading :SOUTH}]
+         (fact "after turning left it faces east"
+               (execute rover 'L') => {:x 1 :y 1 :heading :EAST})))
