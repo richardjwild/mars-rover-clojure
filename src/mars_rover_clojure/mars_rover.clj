@@ -5,7 +5,7 @@
 
 (defn execute [rover command]
   (let [current-heading (rover :heading)]
-    (assoc rover :heading ({:NORTH :WEST, :WEST :SOUTH, :SOUTH :EAST} current-heading))))
+    (assoc rover :heading ({:NORTH :WEST, :WEST :SOUTH, :SOUTH :EAST, :EAST :NORTH} current-heading))))
 
 (defn mars-rover-driver [commands]
   nil)
