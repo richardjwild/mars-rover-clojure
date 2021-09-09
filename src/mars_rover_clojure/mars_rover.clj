@@ -25,7 +25,7 @@
   (let [sum (+ value increment)]
     (if (= size sum)
       (- sum size)
-      sum)))
+      (if (neg? sum) (+ sum size) sum))))
 
 (defn- move [rover current-heading]
   (let [translation (translations current-heading)]

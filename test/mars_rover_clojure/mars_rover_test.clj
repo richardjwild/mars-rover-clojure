@@ -40,7 +40,10 @@
          (fact "after turning right it faces west"
                (execute rover \R) => {:x 1 :y 1 :heading :WEST})
          (fact "after moving forward its y coordinate is decremented and its heading is unchanged"
-               (execute rover \M) => {:x 1 :y 0 :heading :SOUTH})))
+               (execute rover \M) => {:x 1 :y 0 :heading :SOUTH}))
+       (with-redefs [grid {:width 1 :height 2}]
+         (fact "after moving off the bottom of the grid it wraps around to the top"
+               (execute {:x 0 :y 0 :heading :SOUTH} \M) => {:x 0 :y 1 :heading :SOUTH})))
 
 (facts "about a mars rover facing east"
        (let [rover {:x 1 :y 1 :heading :EAST}]
