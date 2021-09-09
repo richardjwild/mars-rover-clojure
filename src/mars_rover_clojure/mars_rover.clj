@@ -17,13 +17,19 @@
   (or (= command \L)
       (= command \R)))
 
+(defn- rotate [rover command current-heading]
+  (assoc rover :heading ((rotations command) current-heading)))
+
+(defn- move [rover current-heading]
+  (let [translation (translations current-heading)]
+    (assoc rover :x (+ (translation :x) (rover :x))
+                 :y (+ (translation :y) (rover :y)))))
+
 (defn execute [rover command]
   (let [current-heading (rover :heading)]
     (if (rotation? command)
-      (assoc rover :heading ((rotations command) current-heading))
-      (let [translation (translations current-heading)]
-        (assoc rover :x (+ (translation :x) (rover :x))
-                     :y (+ (translation :y) (rover :y)))))))
+      (rotate rover command current-heading)
+      (move rover current-heading))))
 
 (defn- prettify [rover]
   (format "%d:%d:%s" (rover :x) (rover :y) ({:NORTH \N, :SOUTH \S, :EAST \E, :WEST \W} (rover :heading))))
