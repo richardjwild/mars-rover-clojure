@@ -1,21 +1,21 @@
 (ns mars-rover-clojure.mars-rover)
 
 (def rotations
-  {'L' {:NORTH :WEST, :WEST :SOUTH, :SOUTH :EAST, :EAST :NORTH}
-   'R' {:NORTH :EAST, :WEST :NORTH, :SOUTH :WEST, :EAST :SOUTH}})
+  {\L {:NORTH :WEST, :WEST :SOUTH, :SOUTH :EAST, :EAST :NORTH}
+   \R {:NORTH :EAST, :WEST :NORTH, :SOUTH :WEST, :EAST :SOUTH}})
 
 (def translations
   {:NORTH {:x 0, :y 1}
-   :WEST {:x -1, :y 0}
+   :WEST  {:x -1, :y 0}
    :SOUTH {:x 0, :y -1}
-   :EAST {:x 1, :y 0}})
+   :EAST  {:x 1, :y 0}})
 
 (def grid {:width 10, :height 10})
 (def obstacles #{})
 
 (defn- rotation? [command]
-  (or (= command 'L')
-      (= command 'R')))
+  (or (= command \L)
+      (= command \R)))
 
 (defn execute [rover command]
   (let [current-heading (rover :heading)]
@@ -25,5 +25,8 @@
         (assoc rover :x (+ (translation :x) (rover :x))
                      :y (+ (translation :y) (rover :y)))))))
 
+(defn- prettify [rover]
+  (format "%d:%d:%s" (rover :x) (rover :y) ({:NORTH \N, :SOUTH \S, :EAST \E, :WEST \W} (rover :heading))))
+
 (defn mars-rover-driver [commands]
-  nil)
+  (prettify (reduce execute {:x 0 :y 0 :heading :NORTH} commands)))
