@@ -12,6 +12,7 @@
 
 (def grid {:width 10, :height 10})
 (def obstacles #{})
+(def initial-rover-state {:x 0 :y 0 :heading :NORTH})
 
 (defn- rotation? [command]
   (or (= command \L)
@@ -35,4 +36,4 @@
   (format "%d:%d:%s" (rover :x) (rover :y) ({:NORTH \N, :SOUTH \S, :EAST \E, :WEST \W} (rover :heading))))
 
 (defn mars-rover-driver [commands]
-  (prettify (reduce execute {:x 0 :y 0 :heading :NORTH} commands)))
+  (prettify (reduce execute initial-rover-state commands)))
