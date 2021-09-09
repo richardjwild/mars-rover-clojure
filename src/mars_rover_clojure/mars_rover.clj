@@ -27,11 +27,17 @@
       (- sum size)
       (if (neg? sum) (+ sum size) sum))))
 
+(defn- obstacle? [x y]
+  (let [position [x y]]
+    (some #(= %1 position) obstacles)))
+
 (defn- move [rover current-heading]
   (let [translation (translations current-heading)]
     (let [new-x (add-and-wrap (translation :x) (rover :x) (grid :width))
           new-y (add-and-wrap (translation :y) (rover :y) (grid :height))]
-     (assoc rover :x new-x :y new-y))))
+      (if (obstacle? new-x new-y)
+        (assoc rover :blocked true)
+        (assoc rover :x new-x :y new-y)))))
 
 (defn execute [rover command]
   (let [current-heading (rover :heading)]
@@ -39,8 +45,16 @@
       (rotate rover command current-heading)
       (move rover current-heading))))
 
-(defn- prettify [rover]
+(defn- format-rover [rover]
   (format "%d:%d:%s" (rover :x) (rover :y) ({:NORTH \N, :SOUTH \S, :EAST \E, :WEST \W} (rover :heading))))
+
+(defn- blocked? [rover]
+  (rover :blocked))
+
+(defn- prettify [rover]
+  (if (blocked? rover)
+    (format "O:%s" (format-rover rover))
+    (format-rover rover)))
 
 (defn mars-rover-driver [commands]
   (prettify (reduce execute initial-rover-state commands)))
