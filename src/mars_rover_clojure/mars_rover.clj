@@ -29,7 +29,7 @@
 
 (defn- move [rover current-heading]
   (let [translation (translations current-heading)]
-    (assoc rover :x (+ (translation :x) (rover :x))
+    (assoc rover :x (add-and-wrap (translation :x) (rover :x) (grid :width))
                  :y (add-and-wrap (translation :y) (rover :y) (grid :height)))))
 
 (defn execute [rover command]

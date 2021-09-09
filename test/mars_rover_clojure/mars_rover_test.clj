@@ -21,7 +21,7 @@
          (fact "after moving forward its y coordinate is incremented and its heading is unchanged"
                (execute rover \M) => {:x 1 :y 2 :heading :NORTH}))
        (with-redefs [grid {:width 1 :height 2}]
-         (fact "after moving off the top of the grid it wraps around to the bottom"
+         (fact "after moving off the north of the grid it wraps around to the south"
                (execute {:x 0 :y 1 :heading :NORTH} \M) => {:x 0 :y 0 :heading :NORTH})))
 
 (facts "about a mars rover facing west"
@@ -31,7 +31,10 @@
          (fact "after turning right it faces north"
                (execute rover \R) => {:x 1 :y 1 :heading :NORTH})
          (fact "after moving forward its x coordinate is decremented and its heading is unchanged"
-               (execute rover \M) => {:x 0 :y 1 :heading :WEST})))
+               (execute rover \M) => {:x 0 :y 1 :heading :WEST}))
+       (with-redefs [grid {:width 2 :height 1}]
+         (fact "after moving off the west of the grid it wraps around to the east"
+               (execute {:x 0 :y 0 :heading :WEST} \M) => {:x 1 :y 0 :heading :WEST})))
 
 (facts "about a mars rover facing south"
        (let [rover {:x 1 :y 1 :heading :SOUTH}]
@@ -42,7 +45,7 @@
          (fact "after moving forward its y coordinate is decremented and its heading is unchanged"
                (execute rover \M) => {:x 1 :y 0 :heading :SOUTH}))
        (with-redefs [grid {:width 1 :height 2}]
-         (fact "after moving off the bottom of the grid it wraps around to the top"
+         (fact "after moving off the south of the grid it wraps around to the north"
                (execute {:x 0 :y 0 :heading :SOUTH} \M) => {:x 0 :y 1 :heading :SOUTH})))
 
 (facts "about a mars rover facing east"
@@ -52,4 +55,7 @@
          (fact "after turning right it faces south"
                (execute rover \R) => {:x 1 :y 1 :heading :SOUTH})
          (fact "after moving forward its x coordinate is incremented and its heading is unchanged"
-               (execute rover \M) => {:x 2 :y 1 :heading :EAST})))
+               (execute rover \M) => {:x 2 :y 1 :heading :EAST}))
+       (with-redefs [grid {:width 2 :height 1}]
+         (fact "after moving off the east of the grid it wraps around to the west"
+               (execute {:x 1 :y 0 :heading :EAST} \M) => {:x 0 :y 0 :heading :EAST})))
