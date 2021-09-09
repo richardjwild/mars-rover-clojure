@@ -36,4 +36,6 @@
 (facts "about a mars rover facing east"
        (let [rover {:x 1 :y 1 :heading :EAST}]
          (fact "after turning left it faces north"
-               (execute rover 'L') => {:x 1 :y 1 :heading :NORTH})))
+               (execute rover 'L') => {:x 1 :y 1 :heading :NORTH})
+         (fact "after turning right it faces south"
+               (execute rover 'R') => {:x 1 :y 1 :heading :SOUTH})))

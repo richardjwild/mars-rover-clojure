@@ -2,7 +2,7 @@
 
 (def rotations
   {'L' {:NORTH :WEST, :WEST :SOUTH, :SOUTH :EAST, :EAST :NORTH}
-   'R' {:NORTH :EAST, :WEST :NORTH, :SOUTH :WEST}})
+   'R' {:NORTH :EAST, :WEST :NORTH, :SOUTH :WEST, :EAST :SOUTH}})
 
 (def grid {:width 10, :height 10})
 (def obstacles #{})
