@@ -44,4 +44,6 @@
          (fact "after turning left it faces north"
                (execute rover 'L') => {:x 1 :y 1 :heading :NORTH})
          (fact "after turning right it faces south"
-               (execute rover 'R') => {:x 1 :y 1 :heading :SOUTH})))
+               (execute rover 'R') => {:x 1 :y 1 :heading :SOUTH})
+         (fact "after moving forward its x coordinate is incremented and its heading is unchanged"
+               (execute rover 'M') => {:x 2 :y 1 :heading :EAST})))

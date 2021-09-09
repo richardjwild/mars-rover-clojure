@@ -7,7 +7,8 @@
 (def translations
   {:NORTH {:x 0, :y 1}
    :WEST {:x -1, :y 0}
-   :SOUTH {:x 0, :y -1}})
+   :SOUTH {:x 0, :y -1}
+   :EAST {:x 1, :y 0}})
 
 (def grid {:width 10, :height 10})
 (def obstacles #{})
