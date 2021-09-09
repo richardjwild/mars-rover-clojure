@@ -18,7 +18,7 @@
                (execute rover 'L') => {:x 1 :y 1 :heading :WEST})
          (fact "after turning right it faces east"
                (execute rover 'R') => {:x 1 :y 1 :heading :EAST})
-         (fact "after moving forward its y coordinate is incremented"
+         (fact "after moving forward its y coordinate is incremented and its heading is unchanged"
                (execute rover 'M') => {:x 1 :y 2 :heading :NORTH})))
 
 (facts "about a mars rover facing west"
@@ -26,7 +26,9 @@
          (fact "after turning left it faces south"
                (execute rover 'L') => {:x 1 :y 1 :heading :SOUTH})
          (fact "after turning right it faces north"
-               (execute rover 'R') => {:x 1 :y 1 :heading :NORTH})))
+               (execute rover 'R') => {:x 1 :y 1 :heading :NORTH})
+         (fact "after moving forward its x coordinate is decremented and its heading is unchanged"
+               (execute rover 'M') => {:x 0 :y 1 :heading :WEST})))
 
 (facts "about a mars rover facing south"
        (let [rover {:x 1 :y 1 :heading :SOUTH}]

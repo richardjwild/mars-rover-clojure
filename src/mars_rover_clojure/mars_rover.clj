@@ -15,7 +15,9 @@
   (let [current-heading (rover :heading)]
     (if (rotation? command)
       (assoc rover :heading ((rotations command) current-heading))
-      (assoc rover :y (+ 1 (rover :y))))))
+      (if (= current-heading :NORTH)
+        (assoc rover :y (+ 1 (rover :y)))
+        (assoc rover :x (- 1 (rover :x)))))))
 
 (defn mars-rover-driver [commands]
   nil)
