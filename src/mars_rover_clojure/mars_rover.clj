@@ -21,10 +21,16 @@
 (defn- rotate [rover command current-heading]
   (assoc rover :heading ((rotations command) current-heading)))
 
+(defn- add-and-wrap [increment value size]
+  (let [sum (+ value increment)]
+    (if (= size sum)
+      (- sum size)
+      sum)))
+
 (defn- move [rover current-heading]
   (let [translation (translations current-heading)]
     (assoc rover :x (+ (translation :x) (rover :x))
-                 :y (+ (translation :y) (rover :y)))))
+                 :y (add-and-wrap (translation :y) (rover :y) (grid :height)))))
 
 (defn execute [rover command]
   (let [current-heading (rover :heading)]
