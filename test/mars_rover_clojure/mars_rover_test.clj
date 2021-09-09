@@ -14,5 +14,10 @@
 
 (facts "about a mars rover facing north"
        (let [rover {:x 1 :y 1 :heading :NORTH}]
-             (fact "after turning left it faces west"
-                   (execute rover 'L') => {:x 1 :y 1 :heading :WEST})))
+         (fact "after turning left it faces west"
+               (execute rover 'L') => {:x 1 :y 1 :heading :WEST})))
+
+(facts "about a mars rover facing west"
+       (let [rover {:x 1 :y 1 :heading :WEST}]
+         (fact "after turning left it faces south"
+               (execute rover 'L') => {:x 1 :y 1 :heading :SOUTH})))

@@ -4,7 +4,9 @@
 (def obstacles #{})
 
 (defn execute [rover command]
-  (assoc rover :heading :WEST))
+  (if (= (rover :heading) :NORTH)
+    (assoc rover :heading :WEST)
+    (assoc rover :heading :SOUTH)))
 
 (defn mars-rover-driver [commands]
   nil)
