@@ -14,17 +14,17 @@
    :east  {:x 1, :y 0}})
 
 (def initial-rover-state {:x 0, :y 0, :heading :north})
-(def grid {:width 10, :height 10})
-(def obstacles #{})
+(def grid {:width 10, :height 10})                          ; may be redefined by the tests
+(def obstacles #{})                                         ; may be redefined by the tests
 
 (defn- obstacle? [x y]
   (let [position [x y]]
-    (some #(= %1 position) obstacles)))
+    (some #(= %1 position) obstacles)))                     ; true if an obstacle equals [x y]
 
-(defn- wrap [sum size]
-  (if (= size sum)
-    (- sum size)
-    (if (neg? sum) (+ sum size) sum)))
+(defn- wrap [value size]
+  (if (and (>= value 0) (< value size))                     ; is value within limits?
+    value                                                   ; yes
+    (if (neg? value) (+ value size) (- value size))))       ; no, so wrap it
 
 (defn- move [rover current-heading]
   (let [translation (translation-for-heading current-heading)]
