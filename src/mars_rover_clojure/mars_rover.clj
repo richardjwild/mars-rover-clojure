@@ -1,9 +1,9 @@
 (ns mars-rover-clojure.mars-rover)
 
-(def direction
+(def heading-code
   {:north \N, :south \S, :east \E, :west \W})
 
-(def rotations-for-command
+(def rotations-for-direction
   {\L {:north :west, :west :south, :south :east, :east :north}
    \R {:north :east, :west :north, :south :west, :east :south}})
 
@@ -22,37 +22,35 @@
     (some #(= %1 position) obstacles)))                     ; true if an obstacle equals [x y]
 
 (defn- wrap [value size]
-  (if (and (>= value 0) (< value size))                     ; is value within limits?
-    value                                                   ; yes
-    (if (neg? value) (+ value size) (- value size))))       ; no, so wrap it
+  (if (and (>= value 0) (< value size))
+    value
+    (if (neg? value) (+ value size) (- value size))))
 
-(defn- move [rover current-heading]
-  (let [translation (translation-for-heading current-heading)]
-    (let [new-x (wrap (+ (translation :x) (rover :x)) (grid :width))
-          new-y (wrap (+ (translation :y) (rover :y)) (grid :height))]
+(defn- move [rover]
+  (let [delta (translation-for-heading (rover :heading))]
+    (let [new-x (wrap (+ (delta :x) (rover :x)) (grid :width))
+          new-y (wrap (+ (delta :y) (rover :y)) (grid :height))]
       (if (obstacle? new-x new-y)
         (assoc rover :blocked true)
         (assoc rover :x new-x :y new-y)))))
 
 (defn- rotating? [command]
-  (or (= command \L)
-      (= command \R)))
+  (contains? rotations-for-direction command))
 
-(defn- rotate [rover current-heading command]
-  (let [rotation-for-heading (rotations-for-command command)
-        new-heading (rotation-for-heading current-heading)]
+(defn- rotate [rover direction]
+  (let [rotation-for-heading (rotations-for-direction direction)
+        new-heading (rotation-for-heading (rover :heading))]
     (assoc rover :heading new-heading)))
 
 (defn execute [rover command]
-  (let [current-heading (rover :heading)]
-    (if (rotating? command)
-      (rotate rover current-heading command)
-      (move rover current-heading))))
+  (if (rotating? command)
+    (rotate rover command)
+    (move rover)))
 
 (defn- to-string [rover]
   (format "%s%s"
           (if (rover :blocked) "O:" "")
-          (format "%d:%d:%s" (rover :x) (rover :y) (direction (rover :heading)))))
+          (format "%d:%d:%s" (rover :x) (rover :y) (heading-code (rover :heading)))))
 
 (defn mars-rover-driver [commands]
   (to-string (reduce execute initial-rover-state commands)))
