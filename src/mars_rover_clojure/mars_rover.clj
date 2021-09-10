@@ -1,60 +1,58 @@
 (ns mars-rover-clojure.mars-rover)
 
-(def rotations
-  {\L {:NORTH :WEST, :WEST :SOUTH, :SOUTH :EAST, :EAST :NORTH}
-   \R {:NORTH :EAST, :WEST :NORTH, :SOUTH :WEST, :EAST :SOUTH}})
+(def direction
+  {:north \N, :south \S, :east \E, :west \W})
 
-(def translations
-  {:NORTH {:x 0, :y 1}
-   :WEST  {:x -1, :y 0}
-   :SOUTH {:x 0, :y -1}
-   :EAST  {:x 1, :y 0}})
+(def rotations-for-command
+  {\L {:north :west, :west :south, :south :east, :east :north}
+   \R {:north :east, :west :north, :south :west, :east :south}})
 
+(def translation-for-heading
+  {:north {:x 0, :y 1}
+   :west  {:x -1, :y 0}
+   :south {:x 0, :y -1}
+   :east  {:x 1, :y 0}})
+
+(def initial-rover-state {:x 0, :y 0, :heading :north})
 (def grid {:width 10, :height 10})
 (def obstacles #{})
-(def initial-rover-state {:x 0 :y 0 :heading :NORTH})
-
-(defn- rotation? [command]
-  (or (= command \L)
-      (= command \R)))
-
-(defn- rotate [rover command current-heading]
-  (assoc rover :heading ((rotations command) current-heading)))
-
-(defn- add-and-wrap [increment value size]
-  (let [sum (+ value increment)]
-    (if (= size sum)
-      (- sum size)
-      (if (neg? sum) (+ sum size) sum))))
 
 (defn- obstacle? [x y]
   (let [position [x y]]
     (some #(= %1 position) obstacles)))
 
+(defn- wrap [sum size]
+  (if (= size sum)
+    (- sum size)
+    (if (neg? sum) (+ sum size) sum)))
+
 (defn- move [rover current-heading]
-  (let [translation (translations current-heading)]
-    (let [new-x (add-and-wrap (translation :x) (rover :x) (grid :width))
-          new-y (add-and-wrap (translation :y) (rover :y) (grid :height))]
+  (let [translation (translation-for-heading current-heading)]
+    (let [new-x (wrap (+ (translation :x) (rover :x)) (grid :width))
+          new-y (wrap (+ (translation :y) (rover :y)) (grid :height))]
       (if (obstacle? new-x new-y)
         (assoc rover :blocked true)
         (assoc rover :x new-x :y new-y)))))
 
+(defn- rotating? [command]
+  (or (= command \L)
+      (= command \R)))
+
+(defn- rotate [rover current-heading command]
+  (let [rotation-for-heading (rotations-for-command command)
+        new-heading (rotation-for-heading current-heading)]
+    (assoc rover :heading new-heading)))
+
 (defn execute [rover command]
   (let [current-heading (rover :heading)]
-    (if (rotation? command)
-      (rotate rover command current-heading)
+    (if (rotating? command)
+      (rotate rover current-heading command)
       (move rover current-heading))))
 
-(defn- format-rover [rover]
-  (format "%d:%d:%s" (rover :x) (rover :y) ({:NORTH \N, :SOUTH \S, :EAST \E, :WEST \W} (rover :heading))))
-
-(defn- blocked? [rover]
-  (rover :blocked))
-
-(defn- prettify [rover]
-  (if (blocked? rover)
-    (format "O:%s" (format-rover rover))
-    (format-rover rover)))
+(defn- to-string [rover]
+  (format "%s%s"
+          (if (rover :blocked) "O:" "")
+          (format "%d:%d:%s" (rover :x) (rover :y) (direction (rover :heading)))))
 
 (defn mars-rover-driver [commands]
-  (prettify (reduce execute initial-rover-state commands)))
+  (to-string (reduce execute initial-rover-state commands)))
